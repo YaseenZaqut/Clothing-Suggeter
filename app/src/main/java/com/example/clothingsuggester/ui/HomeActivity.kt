@@ -1,22 +1,25 @@
-package com.example.clothingsuggester
+package com.example.clothingsuggester.ui
 
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.clothingsuggester.R
 import com.example.clothingsuggester.data.domain.WeatherData
 import com.example.clothingsuggester.databinding.ActivityMainBinding
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var temp : String
     val  client = OkHttpClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         makeRequestUsingOKHTTP()
@@ -25,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun makeRequestUsingOKHTTP() {
         Log.i(TAG , "make Request")
-
         val request = Request.Builder().url(getUrl()).build()
         client.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
@@ -34,19 +36,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {jsonString ->
-                     temp = Gson().fromJson(jsonString , WeatherData::class.java).main.temp.toString()
+                    temp = Gson().fromJson(jsonString , WeatherData::class.java).main.temp.toString()
                 }
-                runOnUiThread {
-                    if (temp.toDouble()>10) {
-                        binding.imageClothes.setImageResource(listOfImgSummerClothes()[0])
-                        Toast.makeText(this@MainActivity , "$temp is sunny" , Toast.LENGTH_SHORT).show()
-                    }
-                    else{
-                        binding.imageClothes.setImageResource(listOfImgWinterClothes()[0])
-                        Toast.makeText(this@MainActivity , "$temp is winter" , Toast.LENGTH_SHORT).show()
-
-                    }
-                }
+              runOnUiThread()
             }
 
         })
@@ -54,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
     private fun getUrl(): HttpUrl{
         val url = HttpUrl.Builder()
@@ -68,17 +61,35 @@ class MainActivity : AppCompatActivity() {
         return url
     }
 
-    private fun listOfImgWinterClothes(): List<Int> {
+    private fun getListOfImgWinterClothes(): List<Int> {
         val bitmapList = mutableListOf<Int>()
         bitmapList.add(R.drawable.jacket)
         bitmapList.add(R.drawable.jacket2)
         return bitmapList.shuffled()
-    }  private fun listOfImgSummerClothes(): List<Int> {
+    }
+
+    private fun getListOfImgSummerClothes(): List<Int> {
         val bitmapList = mutableListOf<Int>()
         bitmapList.add(R.drawable.tshirt)
         bitmapList.add(R.drawable.tshirt1)
         return bitmapList.shuffled()
     }
+
+
+    private fun runOnUiThread(){
+        runOnUiThread {
+            if (temp.toDouble()>10) {
+                binding.imageClothes.setImageResource(getListOfImgSummerClothes()[0])
+                Toast.makeText(this@HomeActivity , "$temp  summer" , Toast.LENGTH_SHORT).show()
+            }
+            else{
+                binding.imageClothes.setImageResource(getListOfImgWinterClothes()[0])
+                Toast.makeText(this@HomeActivity, "$temp  winter" , Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
+
     companion object{
         private const val TAG = "main activity"
         private const val LAT = "lat"

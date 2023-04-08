@@ -7,11 +7,12 @@
     tools:context=".ui.MainActivity">
 
 
+
     <ImageView
         android:id="@+id/image_clothes"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        tools:src="@drawable/baseline_cloud_24"
+        tools:src="@drawable/jacket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
