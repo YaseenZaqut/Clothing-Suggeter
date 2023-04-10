@@ -8,10 +8,18 @@ import com.example.clothingsuggester.R
 import com.example.clothingsuggester.data.model.WeatherResponse
 import com.example.clothingsuggester.data.presinter.MainPresinter
 import com.example.clothingsuggester.databinding.ActivityMainBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() , IMainView {
     lateinit var binding: ActivityMainBinding
     private val presinter = MainPresinter(this)
+    val calendar = Calendar.getInstance()
+    val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val currentDate = Date()
+    val date = dateFormat.format(currentDate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -54,17 +62,22 @@ class MainActivity : AppCompatActivity() , IMainView {
 
     override fun onweatherDataSuccess(weatherResponse: WeatherResponse) {
         val temp = weatherResponse.main.temp
+        val description = weatherResponse.weather[0].description
+
         runOnUiThread {
-            binding.textviewTemp.text = temp.toString()
+            Toast.makeText(this, "temp : $temp", Toast.LENGTH_SHORT).show()
+            binding.let {
+                it.textviewDescription.text = description
+                it.textviewTemp.text = temp.toInt().toString()
+                it.textviewToday.text = dayOfWeek.toString()
+                it.textviewDate.text = date.toString()
+            }
             if (temp > 25) {
                 binding.imageClothes.setImageResource(getListOfImgSummerClothes()[0])
-                Toast.makeText(this, "temp : $temp summer", Toast.LENGTH_SHORT).show()
             }else if (temp in 15.0..25.0){
                 binding.imageClothes.setImageResource(getListOfImgSpringClothes()[0])
-                Toast.makeText(this, "temp : $temp Spring", Toast.LENGTH_SHORT).show()
             } else {
                 binding.imageClothes.setImageResource(getListOfImgWinterClothes()[0])
-                Toast.makeText(this, "temp : $temp winter", Toast.LENGTH_SHORT).show()
             }
         }
 
