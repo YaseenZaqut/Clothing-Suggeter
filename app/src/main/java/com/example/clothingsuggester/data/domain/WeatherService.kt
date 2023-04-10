@@ -1,15 +1,13 @@
 package com.example.clothingsuggester.data.domain
 
-import android.util.Log
-import com.example.clothingsuggester.data.model.WeatherData
-import com.example.clothingsuggester.ui.MainActivity
+import com.example.clothingsuggester.data.model.WeatherResponse
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 
 class WeatherService {
-lateinit var weatherData: WeatherData
-     fun makeRequestUsingOKHTTP() : WeatherData{
+lateinit var weatherResponse: WeatherResponse
+     fun makeRequestUsingOKHTTP(onGetCurrentWeatherResponse: (WeatherResponse) -> Unit ) {
         val client = OkHttpClient()
 
         val request = Request.Builder().url(getUrl()).build()
@@ -17,10 +15,10 @@ lateinit var weatherData: WeatherData
             override fun onFailure(call: Call, e: IOException) {
             }
             override fun onResponse(call: Call, response: Response) {
-              weatherData = Gson().fromJson(response.body?.string() , WeatherData::class.java)
+              weatherResponse = Gson().fromJson(response.body?.string() , WeatherResponse::class.java)
+                onGetCurrentWeatherResponse(weatherResponse)
             }
         })
-         return weatherData
     }
 
     private fun getUrl(): HttpUrl {

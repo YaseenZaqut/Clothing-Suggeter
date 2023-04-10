@@ -1,6 +1,6 @@
 package com.example.clothingsuggester.data.model
 
-data class WeatherData(
+data class WeatherResponse(
     val coord: Coord,
     val weather: List<Weather>,
     val base: String,

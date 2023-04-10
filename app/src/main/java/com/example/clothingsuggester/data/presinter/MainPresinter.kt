@@ -1,16 +1,17 @@
 package com.example.clothingsuggester.data.presinter
 
 import com.example.clothingsuggester.data.domain.WeatherService
-import com.example.clothingsuggester.data.model.Main
-import com.example.clothingsuggester.data.model.WeatherData
+import com.example.clothingsuggester.data.model.WeatherResponse
 import com.example.clothingsuggester.ui.IMainView
+import javax.security.auth.callback.Callback
 
-class MainPresinter {
-    private val api = WeatherService()
-    lateinit var view: IMainView
-    fun getUserInfo() {
+class MainPresinter(private val view : IMainView)  {
+    private val weatherService= WeatherService()
+    fun presentWeatherState() {
+        weatherService.makeRequestUsingOKHTTP (::onGetWeatherState)
+    }
+    private fun onGetWeatherState(weatherResponse: WeatherResponse){
+        view.onweatherDataSuccess(weatherResponse)
 
-        val result = api.makeRequestUsingOKHTTP()
-        view.onweatherDataSuccess(result)
     }
 }

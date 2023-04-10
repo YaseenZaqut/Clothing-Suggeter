@@ -1,7 +1,7 @@
 package com.example.clothingsuggester.ui
 
-import com.example.clothingsuggester.data.model.WeatherData
+import com.example.clothingsuggester.data.model.WeatherResponse
 
 interface IMainView {
-    fun onweatherDataSuccess(weatherData: WeatherData)
+    fun onweatherDataSuccess(weatherResponse: WeatherResponse)
 }
