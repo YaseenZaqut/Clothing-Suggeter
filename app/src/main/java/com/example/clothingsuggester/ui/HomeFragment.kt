@@ -1,5 +1,6 @@
 package com.example.clothingsuggester.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,16 +16,18 @@ import okhttp3.*
 import java.io.IOException
 
 class HomeFragment : Fragment() {
-    lateinit var temp: String
+     var temp: Double = 0.0
     val client = OkHttpClient()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
             makeRequestUsingOKHTTP()
         return binding.root
     }
@@ -38,8 +41,8 @@ class HomeFragment : Fragment() {
                 Log.i(TAG, "${e.message}")
             }
             override fun onResponse(call: Call, response: Response) {
-                response.body?.string()?.let { jsonString ->
-                    temp = Gson().fromJson(jsonString, WeatherData::class.java).main.temp.toString()
+                response.body?.string().let { jsonString ->
+                    temp = Gson().fromJson(jsonString, WeatherData::class.java).main.temp
                 }
                 runOnUiThread()
             }
@@ -60,29 +63,29 @@ class HomeFragment : Fragment() {
     }
 
     private fun getListOfImgWinterClothes(): List<Int> {
-        val bitmapList = mutableListOf<Int>()
-        bitmapList.add(R.drawable.jacket11)
-        bitmapList.add(R.drawable.jacket12)
-        bitmapList.add(R.drawable.jacket14)
-        bitmapList.add(R.drawable.jacket15)
-        return bitmapList.shuffled()
+        val imageList = mutableListOf<Int>()
+        imageList.add(R.drawable.jacket11)
+        imageList.add(R.drawable.jacket12)
+        imageList.add(R.drawable.jacket14)
+        imageList.add(R.drawable.jacket15)
+        return imageList.shuffled()
     }
 
     private fun getListOfImgSummerClothes(): List<Int> {
-        val bitmapList = mutableListOf<Int>()
-        bitmapList.add(R.drawable.summer1)
-        bitmapList.add(R.drawable.summer2)
-        bitmapList.add(R.drawable.summer3)
-        bitmapList.add(R.drawable.summer4)
-        bitmapList.add(R.drawable.summer5)
-        return bitmapList.shuffled()
+        val imageList = mutableListOf<Int>()
+        imageList.add(R.drawable.summer1)
+        imageList.add(R.drawable.summer2)
+        imageList.add(R.drawable.summer3)
+        imageList.add(R.drawable.summer4)
+        imageList.add(R.drawable.summer5)
+        return imageList.shuffled()
     }
 
 
     private fun runOnUiThread() {
-        binding.textviewTemp.text = temp
+        binding.textviewTemp.text = temp.toString()
         activity?.runOnUiThread {
-            if (temp.toDouble() > 25) {
+            if (temp > 25) {
                 binding.imageClothes.setImageResource(getListOfImgSummerClothes()[0])
                 Toast.makeText(activity, "tepm : $temp summer", Toast.LENGTH_SHORT).show()
             } else {
