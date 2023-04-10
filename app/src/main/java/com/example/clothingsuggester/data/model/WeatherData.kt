@@ -1,4 +1,4 @@
-package com.example.clothingsuggester.data.domain
+package com.example.clothingsuggester.data.model
 
 data class WeatherData(
     val coord: Coord,
