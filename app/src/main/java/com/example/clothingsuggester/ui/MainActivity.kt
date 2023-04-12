@@ -5,17 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.clothingsuggester.R
-import com.example.clothingsuggester.data.model.WeatherResponse
-import com.example.clothingsuggester.data.presinter.MainPresinter
+import com.example.clothingsuggester.model.WeatherResponse
+import com.example.clothingsuggester.presinter.IMainView
+import com.example.clothingsuggester.presinter.MainPresenter
 import com.example.clothingsuggester.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() , IMainView {
+class MainActivity : AppCompatActivity(), IMainView {
     lateinit var binding: ActivityMainBinding
-    private val presinter = MainPresinter(this)
+    private val presinter = MainPresenter(this)
     val calendar = Calendar.getInstance()
-    val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
+    val dayOfWeek =
+        calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val currentDate = Date()
     val date = dateFormat.format(currentDate)
@@ -50,7 +52,8 @@ class MainActivity : AppCompatActivity() , IMainView {
         imageList.add(R.drawable.summer5)
         return imageList.shuffled()
     }
-   fun getListOfImgSpringClothes(): List<Int> {
+
+    fun getListOfImgSpringClothes(): List<Int> {
         val imageList = mutableListOf<Int>()
         imageList.add(R.drawable.spring1)
         imageList.add(R.drawable.spring2)
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() , IMainView {
         return imageList.shuffled()
     }
 
-    override fun onweatherDataSuccess(weatherResponse: WeatherResponse) {
+    override fun onWeatherDataSuccess(weatherResponse: WeatherResponse) {
         val temp = weatherResponse.main.temp
         val description = weatherResponse.weather[0].description
 
@@ -74,7 +77,7 @@ class MainActivity : AppCompatActivity() , IMainView {
             }
             if (temp > 25) {
                 binding.imageClothes.setImageResource(getListOfImgSummerClothes()[0])
-            }else if (temp in 15.0..25.0){
+            } else if (temp in 15.0..25.0) {
                 binding.imageClothes.setImageResource(getListOfImgSpringClothes()[0])
             } else {
                 binding.imageClothes.setImageResource(getListOfImgWinterClothes()[0])

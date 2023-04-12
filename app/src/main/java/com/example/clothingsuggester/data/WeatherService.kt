@@ -1,36 +1,36 @@
-package com.example.clothingsuggester.data.domain
+package com.example.clothingsuggester.data
 
-import com.example.clothingsuggester.data.model.WeatherResponse
+import android.util.Log
+import com.example.clothingsuggester.model.WeatherResponse
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 
 class WeatherService {
-lateinit var weatherResponse: WeatherResponse
-     fun makeRequestUsingOKHTTP(onGetCurrentWeatherResponse: (WeatherResponse) -> Unit ) {
+    lateinit var weatherResponse: WeatherResponse
+    fun makeRequestUsingOKHTTP(onGetCurrentWeatherResponse: (WeatherResponse) -> Unit) {
         val client = OkHttpClient()
-
         val request = Request.Builder().url(getUrl()).build()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.i(TAG , "Fail ${e.message}")
             }
+
             override fun onResponse(call: Call, response: Response) {
-              weatherResponse = Gson().fromJson(response.body?.string() , WeatherResponse::class.java)
-                onGetCurrentWeatherResponse(weatherResponse)
+                if (response.isSuccessful) {
+                    weatherResponse =
+                        Gson().fromJson(response.body?.string(), WeatherResponse::class.java)
+                    onGetCurrentWeatherResponse(weatherResponse)
+                }
             }
         })
     }
 
     private fun getUrl(): HttpUrl {
-        val url = HttpUrl.Builder()
-            .scheme(SCHEME)
-            .host(HOST)
-            .addPathSegment(PATH)
-            .addQueryParameter(LAT, GAZA_LAT)
-            .addQueryParameter(LON, GAZA_LON)
+        val url = HttpUrl.Builder().scheme(SCHEME).host(HOST).addPathSegment(PATH)
+            .addQueryParameter(LAT, GAZA_LAT).addQueryParameter(LON, GAZA_LON)
             .addQueryParameter(UNITS, "metric")
-            .addQueryParameter(APP_KEY, "5591e9a22ae1fe0c591a03b968c6e3ff")
-            .build()
+            .addQueryParameter(APP_KEY, "5591e9a22ae1fe0c591a03b968c6e3ff").build()
         return url
     }
 

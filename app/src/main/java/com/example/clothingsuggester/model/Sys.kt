@@ -1,4 +1,4 @@
-package com.example.clothingsuggester.data.model
+package com.example.clothingsuggester.model
 
 data class Sys(
     val country: String,
