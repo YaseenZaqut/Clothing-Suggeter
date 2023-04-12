@@ -14,7 +14,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), IMainView {
     lateinit var binding: ActivityMainBinding
-    private val presinter = MainPresenter(this)
+    private val presenter = MainPresenter(this)
     val calendar = Calendar.getInstance()
     val dayOfWeek =
         calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), IMainView {
     }
 
     private fun setup() {
-        presinter.presentWeatherState()
+        presenter.presentWeatherState()
     }
 
     fun getListOfImgWinterClothes(): List<Int> {
