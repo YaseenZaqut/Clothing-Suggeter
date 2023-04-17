@@ -41,11 +41,11 @@ class MainActivity : AppCompatActivity(), IMainView {
                 it.textviewDate.text = dateData.date()
             }
             if (temp > 25) {
-                binding.imageClothes.setImageResource(imageData.summerClothesImage())
+                binding.imageClothes.setImageResource(imageData.summerClothesImage(this))
             } else if (temp in 15.0..25.0) {
-                binding.imageClothes.setImageResource(imageData.moderateClothesImage())
+                binding.imageClothes.setImageResource(imageData.moderateClothesImage(this))
             } else {
-                binding.imageClothes.setImageResource(imageData.winterClothesImage())
+                binding.imageClothes.setImageResource(imageData.winterClothesImage(this))
             }
         }
     }
